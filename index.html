@@ -7,11 +7,11 @@
 <style>
     * {
         background-color: #404040;
-        color: white; /* White */
+        color: white;
         font-family: "Roboto Condensed", Arial, sans-serif;
     }
     #card {
-        max-width: 400pt;
+        max-width: 280pt;
         margin: 0 auto;
         padding: 6pt;
     }
@@ -23,11 +23,11 @@
     }
     .textField {
         width: 100%;
-        background-color: transparent; /* Dark Grey */
+        background-color: transparent;
         border: 0;
         padding: 6pt;
         text-align: center;
-        font-size: 31pt; /* Default font size */
+        font-size: 31pt;
         outline: none;
     }
     #pageTitle {
@@ -46,11 +46,11 @@
         line-height: 60%;
     }
     #clearFavicon {
-        font-size: 7pt;
+        font-size: 9pt;
     }
     #pageColor {
         text-align: left;
-        width: fit-content;
+        width: 50%;
     }
     #textContainer > div {
         display: flex;
@@ -65,24 +65,22 @@
     }
     #colors {
         display: grid;
-        grid-template-columns: repeat(8, 1fr); /* Equal width columns */
-        grid-template-rows: repeat(8, 1fr); /* Equal height rows */
+        grid-template-columns: repeat(16, 1fr); /* Equal width columns */
+        grid-template-rows: repeat(4, 1fr); /* Equal height rows */
         gap: 0;
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 4 / 1;
         height: 100%;
     }
     .colorButton {
-        width: 100%; /* Button width fills parent */
-        height: 100%; /* Button height fills parent */
+        width: 100%;
+        height: 100%;
         border: none;
         cursor: pointer;
     }
-
-    /* Media query for viewport width */
-    @media (max-width: 400pt) {
-        #pageTitle, #pageColor, #faviconBtn {
-            font-size: calc(10pt + 6 * (100vw - 200pt) / 200); /* Linear scaling of font size */
-        }
+    @media (max-width: 400pt) { /* Media query for viewport width */
+        #pageTitle { font-size: calc(15pt + 16 * (100vw - 200pt) / 200); }  /* Linear scaling of font size */
+        #pageColor, #faviconBtn { font-size: calc(10pt + 6 * (100vw - 200pt) / 200); } /* Linear scaling of font size */
+        #clearFavicon { font-size: calc(6pt + 3 * (100vw - 200pt) / 200); } /* Linear scaling of font size */
     }
 </style>
 </head>
@@ -94,7 +92,7 @@
             <input type="text" id="pageTitle" class="textField" placeholder="Page title">
         </div>
         <div>
-            <button id="faviconBtn" >Favicon color<br/><span id="clearFavicon">CLICK HERE TO CLEAR</span></button>
+            <button id="faviconBtn" >Favicon color<br/><span id="clearFavicon">CLICK TO CLEAR</span></button>
             <input type="text" id="pageColor" class="textField" placeholder="Transparent">
         </div>
     </div>
@@ -156,7 +154,27 @@
             return button;
         }
     
-        var colors = [ // maybe order from darker to lighter?
+
+        var colors = [ // 
+            '000000', '550000', 'AA0000', 'FF0000',
+            '00AA00', '55AA00', 'AAAA00', 'FFAA00',
+            '005500', '555500', 'AA5500', 'FF5500',
+            '00FF00', '55FF00', 'AAFF00', 'FFFF00',
+            '000055', '550055', 'AA0055', 'FF0055',
+            '00AA55', '55AA55', 'AAAA55', 'FFAA55',
+            '005555', '555555', 'AA5555', 'FF5555',
+            '00FF55', '55FF55', 'AAFF55', 'FFFF55',
+            '0000AA', '5500AA', 'AA00AA', 'FF00AA',
+            '00AAAA', '55AAAA', 'AAAAAA', 'FFAAAA',
+            '0055AA', '5555AA', 'AA55AA', 'FF55AA',
+            '00FFAA', '55FFAA', 'AAFFAA', 'FFFFAA',
+            '0000FF', '5500FF', 'AA00FF', 'FF00FF',
+            '00AAFF', '55AAFF', 'AAAFFF', 'FFAAFF',
+            '0055FF', '5555FF', 'AA55FF', 'FF55FF',
+            '00FFFF', '55FFFF', 'AAFFFF', 'FFFFFF' 
+        ];
+
+        var colors2 = [ 
           'FFFF00', 'AAFF00', '55FF00', '00FF00',
           '00FF55', '55FF55', 'AAFF55', 'FFFF55',
           'FFAA00', 'AAAA00', '55AA00', '00AA00',
