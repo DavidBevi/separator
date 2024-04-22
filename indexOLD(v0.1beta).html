@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&lrm;</title>
+<style>
+    * {
+        background-color: #404040;
+        color: white;
+        font-family: "Roboto Condensed", Arial, sans-serif;
+    }
+    #card {
+        max-width: 280pt;
+        margin: 0 auto;
+        padding: 6pt;
+    }
+    #textContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 6pt;
+    }
+    .textField {
+        width: 100%;
+        background-color: transparent;
+        border: 0;
+        padding: 6pt;
+        text-align: center;
+        font-size: 31pt;
+        outline: none;
+    }
+    #pageTitle {
+        min-height: 24pt;
+    }
+    #pageColor, #faviconBtn {
+        min-height: 24pt;
+        font-size: 16pt;
+    }
+    #faviconBtn {
+        width: 50%;
+        border: 0;
+        text-align: right;
+        margin: 0 auto;
+        cursor: pointer;
+        line-height: 60%;
+    }
+    #clearFavicon {
+        font-size: 9pt;
+    }
+    #pageColor {
+        text-align: left;
+        width: 50%;
+    }
+    #textContainer > div {
+        display: flex;
+        width: 100%;
+    }
+    #textContainer > div > input {
+        flex: 1;
+    }
+    #textContainer > div > button {
+        width: 50%;
+        margin-left: 6pt;
+    }
+    #colors {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr); /* Equal width columns */
+        grid-template-rows: repeat(7, 1fr); /* Equal height rows */
+        gap: 0;
+        aspect-ratio: 8 / 7;
+        height: 100%;
+    }
+    .colorButton {
+        width: 100%;
+        height: 100%;
+        border: none;
+        cursor: pointer;
+    }
+    @media (max-width: 400pt) { /* Media query for viewport width */
+        #pageTitle { font-size: calc(15pt + 16 * (100vw - 200pt) / 200); }  /* Linear scaling of font size */
+        #pageColor, #faviconBtn { font-size: calc(10pt + 6 * (100vw - 200pt) / 200); } /* Linear scaling of font size */
+        #clearFavicon { font-size: calc(6pt + 3 * (100vw - 200pt) / 200); } /* Linear scaling of font size */
+    }
+</style>
+</head>
+<body>
+
+<div id="card">
+    <div id="textContainer">
+        <div>
+            <input type="text" id="pageTitle" class="textField" placeholder="Page title">
+        </div>
+        <div>
+            <button id="faviconBtn" >Favicon color<br/><span id="clearFavicon">CLICK TO CLEAR</span></button>
+            <input type="text" id="pageColor" class="textField" placeholder="Transparent">
+        </div>
+    </div>
+    <div id="colors"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pageTitle = document.getElementById('pageTitle');
+        var pageColor = document.getElementById('pageColor');
+        var colorsDiv = document.getElementById('colors');
+        var faviconBtn = document.getElementById('faviconBtn');
+        var clearFavicon = document.getElementById('clearFavicon'); // Add this line
+    
+        var originalTitle = document.title; // Store the original title of the page
+        var originalQuery = window.location.search; // Store the original query string
+    
+        // Set the title to the query string when the page is loaded
+        if (originalQuery !== '') {
+            document.title = decodeURIComponent(originalQuery.substring(1)); // Decode the query string
+        }
+    
+        function updateFavicon(color) {
+            var faviconCanvas = document.createElement('canvas');
+            var context = faviconCanvas.getContext('2d');
+            var head = document.head || document.getElementsByTagName('head')[0];
+            
+            faviconCanvas.width = 32;
+            faviconCanvas.height = 32;
+            context.clearRect(0, 0, 32, 32);
+            
+            if (color) {
+                context.beginPath();
+                context.arc(16, 16, 12, 0, Math.PI * 2);
+                context.fillStyle = color;
+                context.fill();
+            }
+    
+            var newFavicon = faviconCanvas.toDataURL();
+            var favicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
+            favicon.type = 'image/x-icon';
+            favicon.rel = 'icon';
+            favicon.href = newFavicon;
+            head.appendChild(favicon);
+        }
+    
+        function changeTitle(newTitle) {
+            document.title = newTitle || originalTitle; // Set the title to the original title if newTitle is empty
+        }
+    
+        function createColorButton(color) {
+            var button = document.createElement('button');
+            button.className = 'colorButton';
+            button.style.backgroundColor = '#' + color;
+            button.onclick = function() {
+                pageColor.value = '#' + color; // Set pageColor value to the selected color
+                updateFavicon('#' + color);
+            };
+            return button;
+        }
+    
+        var colors = [
+        '000000','00AA00','00CC00','44EE00','88EE00','BBEE00','EEEE00','CCCC00',
+        '222222','00CC44','22EE55','66FF55','AAFF55','DDEE44','EECC22','DDAA22',
+        '444444','00EEAA','44FFAA','88FFAA','CCFFAA','EEDD88','EE8833','EE5500',
+        '666666','00EEEE','55FFFF','AAFFFF','FFFFFF','FFAAAA','FF5555','EE0000',
+        '888888','00AAEE','44AAFF','88AAFF','CCAAFF','EE88CC','EE3388','DD0044',
+        'AAAAAA','0044CC','2255EE','6655FF','AA55FF','CC44DD','DD22BB','CC0077',
+        'CCCCCC','0000AA','0000CC','4400EE','8800EE','AA00EE','BB00DD','BB00CC',
+        ];
+    
+        for (var i = 0; i < colors.length; i++) {
+            var button = createColorButton(colors[i]);
+            colorsDiv.appendChild(button);
+        }
+    
+        faviconBtn.addEventListener('click', function() {
+            updateFavicon('');
+            pageColor.value = ''; // Clear the pageColor value
+        });
+    
+        pageColor.addEventListener('input', function() {
+            var colorValue = pageColor.value.trim().toLowerCase();
+            if (colorValue === 'transparent') {
+                updateFavicon('');
+            } else if (colorValue.match(/^#(?:[0-9a-f]{3}){1,2}$/)) {
+                updateFavicon(colorValue);
+            }
+            clearFavicon.style.visibility = colorValue ? 'visible' : 'hidden'; // Show clearFavicon if pageColor is not blank
+        });
+    
+        pageTitle.addEventListener('input', function() {
+            var newTitle = pageTitle.value.trim();
+            if (newTitle === '') {
+                changeTitle(originalQuery !== '' ? decodeURIComponent(originalQuery.substring(1)) : originalTitle);
+            } else {
+                changeTitle(newTitle);
+            }
+        });
+    
+        pageTitle.focus();
+    });
+</script>
+    
+</body>
+</html>
