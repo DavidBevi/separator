@@ -124,6 +124,7 @@
     var pageTitleInput = document.getElementById('PageTitle');
     var favColorInput = document.getElementById('FavColor');
     var favClearBtn = document.getElementById('FavClear');
+    var pageClearBtn = document.getElementById('PageClear');
 
     // Event listeners
     pageTitleInput.addEventListener('input', function() {
@@ -150,6 +151,14 @@
       setFavColorFromQuery();
       var urlParams = new URLSearchParams(window.location.search);
       urlParams.delete('color');
+      history.replaceState(null, '', window.location.pathname + '?' + urlParams.toString());
+    });
+
+    pageClearBtn.addEventListener('click', function() {
+      document.getElementById('PageTitle').value = '';
+      document.title = '\u200E';
+      var urlParams = new URLSearchParams(window.location.search);
+      urlParams.set('title', '');
       history.replaceState(null, '', window.location.pathname + '?' + urlParams.toString());
     });
   });
